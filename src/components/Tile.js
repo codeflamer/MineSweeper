@@ -1,9 +1,5 @@
-const STATUSES = {
-  HIDDEN: "hidden",
-  MINE: "mine",
-  NUMBER: "number",
-  MARKED: "marked",
-};
+import { GameState, STATUSES } from "../constants";
+import { checkIfLose, checkIfwon, getAdjacentMines } from "./helpers";
 
 const Tile = ({
   tileData,
@@ -85,40 +81,6 @@ const Tile = ({
     });
     //console.log(response);
     setBoardState(response);
-    //checkGameEnd();
-  };
-
-  const getAdjacentMines = (tile, board) => {
-    //List of Adjacent Tiles
-    let adjacents = [];
-    for (let offsetX = -1; offsetX <= 1; offsetX++) {
-      for (let offsetY = -1; offsetY <= 1; offsetY++) {
-        const adj = board[tile.x + offsetX]?.[tile.y + offsetY];
-        if (adj) adjacents.push(adj);
-      }
-    }
-    return adjacents;
-  };
-
-  const checkIfwon = (board) => {
-    return board.every((row) => {
-      return row.every((title) => {
-        return (
-          title.status === STATUSES.NUMBER ||
-          (title.mine &&
-            (title.status === STATUSES.HIDDEN ||
-              title.status === STATUSES.MARKED))
-        );
-      });
-    });
-  };
-
-  const checkIfLose = (board) => {
-    return board.some((row) => {
-      return row.some((title) => {
-        return title.status === STATUSES.MINE;
-      });
-    });
   };
 
   const checkGameEnd = () => {
@@ -127,14 +89,14 @@ const Tile = ({
     const lose = checkIfLose(boardState);
 
     if (win || lose) {
-      //setStopProp(true);
+      setStopProp(true);
     }
 
     if (win) {
-      setGameStatus("You Win");
+      setGameStatus(GameState.WIN);
     }
     if (lose) {
-      setGameStatus("You Lose");
+      setGameStatus(GameState.LOSE);
       //After you Lose, Reveal all the mines
       let response = boardState.map((board) => {
         board?.map((tile) => {
@@ -152,8 +114,9 @@ const Tile = ({
 
   return (
     <div
-      className={`w-10 h-10 bg-blue-500 text-white hover:cursor-pointer 
+      className={`flex flex-col items-center justify-center w-10 h-10  text-white hover:cursor-pointer rounded-md drop-shadow-lg
       ${tileData?.status === STATUSES.MARKED && `bg-yellow-500`} 
+      ${tileData?.status === STATUSES.HIDDEN && `bg-white`} 
       ${tileData?.status === STATUSES.MINE && `bg-red-500`} 
       ${tileData?.status === STATUSES.NUMBER && `bg-blue-800`}`}
       onContextMenu={(e) => {
@@ -165,8 +128,9 @@ const Tile = ({
         checkGameEnd();
       }}
     >
-      {/* {tileData.AdjacentMines} */}
-      {tileData.AdjacentMines === 0 ? " " : tileData.AdjacentMines}
+      <span className="font-bold text-[24px]">
+        {tileData.AdjacentMines === 0 ? " " : tileData.AdjacentMines}
+      </span>
     </div>
   );
 };
