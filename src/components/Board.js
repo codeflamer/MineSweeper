@@ -85,6 +85,7 @@ const Board = () => {
                 key={i + 1}
                 tileData={tileData}
                 setBoardState={setBoardState}
+                boardState={boardState}
                 setNumMines={setNumMines}
               />
             ))
