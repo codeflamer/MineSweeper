@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import Tile from "./Tile";
 
 const boardSize = 16;
-// const numMines = 10;
 
 const Board = () => {
   const [boardState, setBoardState] = useState([]);
-  const [numMines, setNumMines] = useState(40);
+  const [numMines, setNumMines] = useState(5);
+  const [stopProp, setStopProp] = useState(false);
+  const [gameStatus, setGameStatus] = useState();
 
   const STATUSES = {
     HIDDEN: "hidden",
@@ -78,6 +79,7 @@ const Board = () => {
             Timer: <span>The Timer is gonna stay Here</span>
           </div>
         </div>
+        <div className="text-center">{gameStatus}</div>
         {/* Game Components */}
         <div className="border border-blue-500 grid grid-cols-16 gap-[4px]">
           {boardState?.map((board) =>
@@ -88,6 +90,9 @@ const Board = () => {
                 setBoardState={setBoardState}
                 boardState={boardState}
                 setNumMines={setNumMines}
+                stopProp={stopProp}
+                setStopProp={setStopProp}
+                setGameStatus={setGameStatus}
               />
             ))
           )}

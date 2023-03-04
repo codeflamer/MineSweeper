@@ -1,5 +1,3 @@
-import { useEffect, useRef, useState } from "react";
-
 const STATUSES = {
   HIDDEN: "hidden",
   MINE: "mine",
@@ -7,10 +5,17 @@ const STATUSES = {
   MARKED: "marked",
 };
 
-const Tile = ({ tileData, setBoardState, setNumMines, boardState }) => {
-  const [numAdjMines, setNumAdjMines] = useState();
-  const [stopProp, setStopProp] = useState(false);
+const Tile = ({
+  tileData,
+  setBoardState,
+  setNumMines,
+  boardState,
+  setStopProp,
+  stopProp,
+  setGameStatus,
+}) => {
   const rightClick = (e) => {
+    if (stopProp) return;
     e.preventDefault();
     if (
       tileData.status !== STATUSES.HIDDEN &&
@@ -41,7 +46,6 @@ const Tile = ({ tileData, setBoardState, setNumMines, boardState }) => {
 
   const RevealTiles = (boardState, tileData) => {
     if (stopProp) return;
-    console.log(stopProp);
     let response;
     //console.log("clicke", tileData);
     if (tileData.status !== STATUSES.HIDDEN) {
@@ -97,20 +101,52 @@ const Tile = ({ tileData, setBoardState, setNumMines, boardState }) => {
   };
 
   const checkIfwon = (board) => {
-    return true;
+    return board.every((row) => {
+      return row.every((title) => {
+        return (
+          title.status === STATUSES.NUMBER ||
+          (title.mine &&
+            (title.status === STATUSES.HIDDEN ||
+              title.status === STATUSES.MARKED))
+        );
+      });
+    });
   };
+
   const checkIfLose = (board) => {
-    return true;
+    return board.some((row) => {
+      return row.some((title) => {
+        return title.status === STATUSES.MINE;
+      });
+    });
   };
 
   const checkGameEnd = () => {
     if (stopProp) return;
     const win = checkIfwon(boardState);
     const lose = checkIfLose(boardState);
-    //console.log(e.nativeEvent.stopImmediatePropagation());
 
     if (win || lose) {
-      setStopProp(true);
+      //setStopProp(true);
+    }
+
+    if (win) {
+      setGameStatus("You Win");
+    }
+    if (lose) {
+      setGameStatus("You Lose");
+      //After you Lose, Reveal all the mines
+      let response = boardState.map((board) => {
+        board?.map((tile) => {
+          if (tile.mine === true) {
+            tile.status = STATUSES.MINE;
+          }
+          return tile;
+        });
+
+        return board;
+      });
+      setBoardState(response);
     }
   };
 
@@ -121,15 +157,11 @@ const Tile = ({ tileData, setBoardState, setNumMines, boardState }) => {
       ${tileData?.status === STATUSES.MINE && `bg-red-500`} 
       ${tileData?.status === STATUSES.NUMBER && `bg-blue-800`}`}
       onContextMenu={(e) => {
-        if (!stopProp) {
-          rightClick();
-          checkGameEnd(e);
-        }
-        return;
+        rightClick(e);
+        checkGameEnd();
       }}
       onClick={(e) => {
         RevealTiles(boardState, tileData);
-        setStopProp(false);
         checkGameEnd();
       }}
     >
