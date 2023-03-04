@@ -1,6 +1,7 @@
 import { GameState, STATUSES } from "../constants";
 import { checkIfLose, checkIfwon, getAdjacentMines } from "./helpers";
-import { FlagIcon } from "@heroicons/react/24/solid";
+import { FlagIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
+import toast, { Toaster } from "react-hot-toast";
 
 const Tile = ({
   tileData,
@@ -98,6 +99,7 @@ const Tile = ({
     }
     if (lose) {
       setGameStatus(GameState.LOSE);
+
       //After you Lose, Reveal all the mines
       let response = boardState.map((board) => {
         board?.map((tile) => {
@@ -119,7 +121,7 @@ const Tile = ({
       ${tileData?.status === STATUSES.MARKED && `bg-red-200`} 
       ${tileData?.status === STATUSES.HIDDEN && `bg-white`} 
       ${tileData?.status === STATUSES.MINE && `bg-red-500`} 
-      ${tileData?.status === STATUSES.NUMBER && `bg-blue-800`}`}
+      ${tileData?.status === STATUSES.NUMBER && `bg-blue-700`}`}
       onContextMenu={(e) => {
         rightClick(e);
         checkGameEnd();
@@ -136,6 +138,8 @@ const Tile = ({
       {tileData?.status === STATUSES.MARKED && (
         <FlagIcon className="text-pink-500" />
       )}
+
+      {/* <QuestionMarkCircleIcon /> */}
     </div>
   );
 };

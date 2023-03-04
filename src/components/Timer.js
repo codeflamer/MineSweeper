@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { toast, Toaster } from "react-hot-toast";
 import { useTimer } from "react-timer-hook";
 import { GameState } from "../constants";
 
@@ -17,13 +18,19 @@ const Timer = ({ expiryTimestamp, resetGame, gameStatus }) => {
   };
 
   useEffect(() => {
-    if (gameStatus === GameState.LOSE || gameStatus === GameState.WIN) {
+    if (gameStatus === GameState.LOSE) {
+      toast.error("You Lose!");
       pause();
     }
-  }, [gameStatus, pause]);
+    if (gameStatus === GameState.WIN) {
+      toast.success("You Win!");
+      pause();
+    }
+  }, [gameStatus]);
 
   return (
     <div className="flex border flex-1 justify-between items-center">
+      <Toaster position="top-center" />
       <div className="bg-[#ccddee] p-2 rounded-md text-white text-[24px] font-bold tracking-widest px-2">
         0
         {minutes.toString().length === 1 ? (
