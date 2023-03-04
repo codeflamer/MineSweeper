@@ -1,5 +1,6 @@
 import { GameState, STATUSES } from "../constants";
 import { checkIfLose, checkIfwon, getAdjacentMines } from "./helpers";
+import { FlagIcon } from "@heroicons/react/24/solid";
 
 const Tile = ({
   tileData,
@@ -114,8 +115,8 @@ const Tile = ({
 
   return (
     <div
-      className={`flex flex-col items-center justify-center w-10 h-10  text-white hover:cursor-pointer rounded-md drop-shadow-lg
-      ${tileData?.status === STATUSES.MARKED && `bg-yellow-500`} 
+      className={`flex flex-col items-center justify-center w-10 h-10 text-white hover:cursor-pointer rounded-md drop-shadow-lg
+      ${tileData?.status === STATUSES.MARKED && `bg-red-200`} 
       ${tileData?.status === STATUSES.HIDDEN && `bg-white`} 
       ${tileData?.status === STATUSES.MINE && `bg-red-500`} 
       ${tileData?.status === STATUSES.NUMBER && `bg-blue-800`}`}
@@ -131,6 +132,10 @@ const Tile = ({
       <span className="font-bold text-[24px]">
         {tileData.AdjacentMines === 0 ? " " : tileData.AdjacentMines}
       </span>
+
+      {tileData?.status === STATUSES.MARKED && (
+        <FlagIcon className="text-pink-500" />
+      )}
     </div>
   );
 };

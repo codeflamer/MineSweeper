@@ -52,7 +52,7 @@ const Board = () => {
     <section className=" max-w-[744px] mx-auto">
       <div className="flex flex-col m-[20px]">
         {/* Heading */}
-        <div className="border border-green-500 h-[50px] my-2 flex  justify-between items-center">
+        <div className=" my-2 flex  justify-between items-center">
           <Timer
             expiryTimestamp={time}
             resetGame={resetGame}

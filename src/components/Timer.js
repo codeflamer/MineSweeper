@@ -23,18 +23,28 @@ const Timer = ({ expiryTimestamp, resetGame, gameStatus }) => {
   }, [gameStatus, pause]);
 
   return (
-    <div className="flex border flex-1 justify-between p-2">
-      <div>{minutes}</div>
-      <div className="cursor-pointer" onClick={ResetGame}>
-        {gameStatus === GameState.WIN && <span>Happy </span>}
-        {gameStatus === GameState.LOSE && <span>Sad </span>}
-        {!gameStatus && <span>Normal Face </span>}
+    <div className="flex border flex-1 justify-between items-center">
+      <div className="bg-[#ccddee] p-2 rounded-md text-white text-[24px] font-bold tracking-widest px-2">
+        0
+        {minutes.toString().length === 1 ? (
+          <span>0{minutes.toString()} </span>
+        ) : (
+          <span>{minutes}</span>
+        )}
       </div>
-      <div>
+      <div className="cursor-pointer" onClick={ResetGame}>
+        {gameStatus === GameState.WIN && (
+          <span className="text-[20px]">😎:WIN </span>
+        )}
+        {gameStatus === GameState.LOSE && <span>😕:LOSE</span>}
+        {!gameStatus && <span>😃:NORMAL</span>}
+      </div>
+      <div className="bg-[#ccddee] p-2 rounded-md text-white text-[24px] font-bold tracking-widest px-2">
+        0
         {seconds.toString().length === 1 ? (
           <span>0{seconds.toString()} </span>
         ) : (
-          seconds
+          <span>{seconds}</span>
         )}
       </div>
     </div>

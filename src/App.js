@@ -3,8 +3,10 @@ import Board from "./components/Board";
 
 function App() {
   return (
-    <div>
-      <h2 className="mx-auto  text-center text-2xl ">MineSweeper Game</h2>
+    <div className="py-3">
+      <h2 className="mx-auto  text-center text-2xl italic font-mono">
+        Welcome to CodeFlamer's Mine Sweeper{" "}
+      </h2>
       <section className="mt-2 ">
         <Board />
       </section>

@@ -12,4 +12,4 @@ export const GameState = {
 
 export const boardSize = 16;
 
-export const numberOfMines = 30;
+export const numberOfMines = 3;
