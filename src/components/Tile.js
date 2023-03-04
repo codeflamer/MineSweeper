@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const STATUSES = {
   HIDDEN: "hidden",
@@ -9,6 +9,7 @@ const STATUSES = {
 
 const Tile = ({ tileData, setBoardState, setNumMines, boardState }) => {
   const [numAdjMines, setNumAdjMines] = useState();
+  const [stopProp, setStopProp] = useState(false);
   const rightClick = (e) => {
     e.preventDefault();
     if (
@@ -39,68 +40,48 @@ const Tile = ({ tileData, setBoardState, setNumMines, boardState }) => {
   };
 
   const RevealTiles = (boardState, tileData) => {
+    if (stopProp) return;
+    console.log(stopProp);
+    let response;
     //console.log("clicke", tileData);
     if (tileData.status !== STATUSES.HIDDEN) {
       return;
     }
     if (tileData.mine) {
       //Change Status to Mine
-      setBoardState((prevState) => {
-        return prevState?.map((board) => {
-          const FindTile = board?.find(
-            (tile) => tile.x === tileData.x && tile.y === tileData.y
-          );
-          if (FindTile) {
-            //console.log(FindTile);
-            FindTile.status = STATUSES.MINE;
-          }
-          return board;
-        });
+      response = boardState?.map((board) => {
+        const FindTile = board?.find(
+          (tile) => tile.x === tileData.x && tile.y === tileData.y
+        );
+        if (FindTile) {
+          //console.log(FindTile);
+          FindTile.status = STATUSES.MINE;
+        }
+        return board;
       });
+      setBoardState(response);
       return;
     }
 
-    boardState.map((board) => {
+    response = boardState.map((board) => {
       const foundTile = board?.find(
         (tile) => tile.x === tileData.x && tile.y === tileData.y
       );
       if (foundTile) {
-        //console.log("Before:", foundTile);
         foundTile.status = STATUSES.NUMBER;
-        setNumAdjMines(0);
-        //console.log("After:", foundTile);
         const adjacentMines = getAdjacentMines(foundTile, boardState);
         const mines = adjacentMines.filter((t) => t.mine);
         if (mines.length === 0) {
-          console.log("Hello");
-          //adjacentMines.forEach(RevealTiles.bind(null, boardState));
-        } else {
-          setNumAdjMines(mines.length);
+          adjacentMines.forEach(RevealTiles.bind(null, boardState));
+        } else if (mines.length > 0) {
+          foundTile.AdjacentMines = mines.length;
         }
       }
       return board;
     });
-    setBoardState(boardState);
-
-    //Change Status to Number
-    // setBoardState((prevState) => {
-    //   return prevState?.map((board) => {
-    //     const FindTile = board?.find(
-    //       (tile) => tile.x === tileData.x && tile.y === tileData.y
-    //     );
-    //     if (FindTile) {
-    //       FindTile.status = STATUSES.NUMBER;
-    //       const adjacentMines = getAdjacentMines(FindTile, prevState);
-    //       const mines = adjacentMines.filter((t) => t.mine);
-    //       if (mines.length === 0) {
-    //         adjacentMines.forEach(RevealTiles.bind(null, board));
-    //       } else {
-    //         //setNumAdjMines(mines.length);
-    //       }
-    //     }
-    //     return board;
-    //   });
-    // });
+    //console.log(response);
+    setBoardState(response);
+    //checkGameEnd();
   };
 
   const getAdjacentMines = (tile, board) => {
@@ -115,7 +96,23 @@ const Tile = ({ tileData, setBoardState, setNumMines, boardState }) => {
     return adjacents;
   };
 
-  // useEffect(() => {}, [boardState]);
+  const checkIfwon = (board) => {
+    return true;
+  };
+  const checkIfLose = (board) => {
+    return true;
+  };
+
+  const checkGameEnd = () => {
+    if (stopProp) return;
+    const win = checkIfwon(boardState);
+    const lose = checkIfLose(boardState);
+    //console.log(e.nativeEvent.stopImmediatePropagation());
+
+    if (win || lose) {
+      setStopProp(true);
+    }
+  };
 
   return (
     <div
@@ -123,10 +120,21 @@ const Tile = ({ tileData, setBoardState, setNumMines, boardState }) => {
       ${tileData?.status === STATUSES.MARKED && `bg-yellow-500`} 
       ${tileData?.status === STATUSES.MINE && `bg-red-500`} 
       ${tileData?.status === STATUSES.NUMBER && `bg-blue-800`}`}
-      onContextMenu={rightClick}
-      onClick={() => RevealTiles(boardState, tileData)}
+      onContextMenu={(e) => {
+        if (!stopProp) {
+          rightClick();
+          checkGameEnd(e);
+        }
+        return;
+      }}
+      onClick={(e) => {
+        RevealTiles(boardState, tileData);
+        setStopProp(false);
+        checkGameEnd();
+      }}
     >
-      {numAdjMines === 0 ? " " : numAdjMines}
+      {/* {tileData.AdjacentMines} */}
+      {tileData.AdjacentMines === 0 ? " " : tileData.AdjacentMines}
     </div>
   );
 };

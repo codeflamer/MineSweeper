@@ -6,7 +6,7 @@ const boardSize = 16;
 
 const Board = () => {
   const [boardState, setBoardState] = useState([]);
-  const [numMines, setNumMines] = useState(10);
+  const [numMines, setNumMines] = useState(40);
 
   const STATUSES = {
     HIDDEN: "hidden",
@@ -28,6 +28,7 @@ const Board = () => {
             (position) => position.x === x && position.y === y
           ),
           status: STATUSES.HIDDEN,
+          AdjacentMines: 0,
           //To know if this particular tile Holds a mine or not
         };
         row.push(tile);
