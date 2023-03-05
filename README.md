@@ -9,3 +9,5 @@ Click on this link to access the working example: https://mine-sweeper-three.ver
 3) If the cells turns red, It measn we have open a mine.
 
 
+![image](https://user-images.githubusercontent.com/43081125/222964312-2c3a0395-f57c-4d0f-ba3c-a1891060a1b7.png)
+Screenshot of the working game
