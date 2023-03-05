@@ -45,7 +45,8 @@ export const checkIfwon = (board) => {
         title.status === STATUSES.NUMBER ||
         (title.mine &&
           (title.status === STATUSES.HIDDEN ||
-            title.status === STATUSES.MARKED))
+            title.status === STATUSES.MARKED ||
+            title.status === STATUSES.QUESTION))
       );
     });
   });

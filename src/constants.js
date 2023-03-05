@@ -3,6 +3,7 @@ export const STATUSES = {
   MINE: "mine",
   NUMBER: "number",
   MARKED: "marked",
+  QUESTION: "question",
 };
 
 export const GameState = {
@@ -12,4 +13,4 @@ export const GameState = {
 
 export const boardSize = 16;
 
-export const numberOfMines = 3;
+export const numberOfMines = 40;

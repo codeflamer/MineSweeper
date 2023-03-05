@@ -26,6 +26,7 @@ const Timer = ({ expiryTimestamp, resetGame, gameStatus }) => {
       toast.success("You Win!");
       pause();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameStatus]);
 
   return (

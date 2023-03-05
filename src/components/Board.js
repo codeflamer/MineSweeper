@@ -59,7 +59,6 @@ const Board = () => {
             gameStatus={gameStatus}
           />
         </div>
-        {/* <div className="text-center">{gameStatus}</div> */}
         {/* Game Components */}
         <div className=" grid grid-cols-16 gap-[4px]">
           {boardState?.map((board) =>

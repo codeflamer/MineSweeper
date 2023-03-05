@@ -1,7 +1,6 @@
 import { GameState, STATUSES } from "../constants";
 import { checkIfLose, checkIfwon, getAdjacentMines } from "./helpers";
 import { FlagIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
-import toast, { Toaster } from "react-hot-toast";
 
 const Tile = ({
   tileData,
@@ -17,7 +16,8 @@ const Tile = ({
     e.preventDefault();
     if (
       tileData.status !== STATUSES.HIDDEN &&
-      tileData.status !== STATUSES.MARKED
+      tileData.status !== STATUSES.MARKED &&
+      tileData.status !== STATUSES.QUESTION
     ) {
       return;
     }
@@ -32,9 +32,11 @@ const Tile = ({
           if (FindTile.status === STATUSES.HIDDEN) {
             FindTile.status = STATUSES.MARKED;
             setNumMines((prev) => prev - 1);
-          } else if (FindTile.status === STATUSES.MARKED) {
+          } else if (FindTile.status === STATUSES.QUESTION) {
             FindTile.status = STATUSES.HIDDEN;
             setNumMines((prev) => prev + 1);
+          } else if (FindTile.status === STATUSES.MARKED) {
+            FindTile.status = STATUSES.QUESTION;
           }
         }
         return board;
@@ -119,6 +121,7 @@ const Tile = ({
     <div
       className={`flex flex-col items-center justify-center w-10 h-10 text-white hover:cursor-pointer rounded-md drop-shadow-lg
       ${tileData?.status === STATUSES.MARKED && `bg-red-200`} 
+      ${tileData?.status === STATUSES.QUESTION && `bg-green-200`} 
       ${tileData?.status === STATUSES.HIDDEN && `bg-white`} 
       ${tileData?.status === STATUSES.MINE && `bg-red-500`} 
       ${tileData?.status === STATUSES.NUMBER && `bg-blue-700`}`}
@@ -139,7 +142,10 @@ const Tile = ({
         <FlagIcon className="text-pink-500" />
       )}
 
-      {/* <QuestionMarkCircleIcon /> */}
+      {tileData?.status === STATUSES.QUESTION && (
+        //<FlagIcon className="text-pink-500" />
+        <QuestionMarkCircleIcon className="text-black" />
+      )}
     </div>
   );
 };
